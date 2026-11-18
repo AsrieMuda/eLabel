@@ -1,0 +1,11 @@
+<!doctype html><html lang="ms"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#102b53"><title>e-Label | Sistem Semakan Pelabelan Semula</title><link rel="stylesheet" href="styles.css"></head><body>
+<div id="app" class="app-shell">
+  <aside class="sidebar" id="sidebar"><div class="brand"><div class="brand-mark">e<span>✓</span></div><div><small>KKM • PROTOTAIP UAT</small><strong>e-Label</strong><span>Semakan Pelabelan<br>Semula Produk</span></div></div>
+    <div class="side-caption">RUANG KERJA</div><nav id="nav"></nav>
+    <div class="side-footer"><span class="uat-dot"></span><div><b>Persekitaran UAT</b><small>Data demonstrasi • bukan rekod rasmi</small></div></div>
+  </aside>
+  <div class="shell-main"><header class="topbar"><button class="mobile-toggle icon-button" id="toggleNav" aria-label="Buka menu">☰</button><div class="crumb"><b>e-Label</b><span id="crumbText"> / Dashboard</span></div><div class="top-actions"><span class="env-badge">UAT v1.0</span><div class="notify-wrap"><button class="icon-button notification-bell" id="bellBtn" title="Notifikasi" aria-label="Notifikasi"><span>♧</span><i id="bellCount">0</i></button><div class="notifications hidden" id="notifyPanel"></div></div><div class="role-control"><div class="avatar">A</div><div><small>Simulasi peranan UAT</small><select id="roleSelect" aria-label="Pilih peranan"><option value="KPP">KPP / Ketua Penolong Pengarah</option><option value="MYSTEP">MySTEP / Pendaftaran</option><option value="REVIEWER">Pegawai Penyemak</option><option value="LETTER">Penjana Surat</option><option value="SIGNATORY">TKPK (KA)</option><option value="APPLICANT">Pemohon</option></select></div></div></div></header>
+  <main id="content" class="content"></main><footer class="footer">e-Label UAT · Paparan simulasi dengan storan pelayar setempat · Akses rasmi belum diaktifkan</footer></div>
+</div>
+<div id="toast" class="toast hidden" role="status"></div><div id="modalRoot"></div>
+<script src="config.js"></script><script src="app.js"></script></body></html>
