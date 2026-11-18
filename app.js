@@ -14,15 +14,22 @@ const DEMO_ROLE_HINTS = Object.freeze({
   'kamarolazizi@moh.gov.my':'LETTER_REVIEWER'
 });
 let loggedInEmail='';
-const APPLICANT_UAT_EMAIL='matjeri99@gmail.com';
-let otpChallenge=null,otpCountdownTimer=null;
-const OTP_LIFETIME_MS=300000,OTP_RESEND_MS=60000,OTP_MAX_ATTEMPTS=5;
-function demoRandomCode(){const a=new Uint32Array(1);crypto.getRandomValues(a);return String(a[0]%1000000).padStart(6,'0')}
-function applicantError(message){const e=$('#applicantLoginError');e.textContent=message;e.classList.remove('hidden')}
-function clearOtpChallenge(){otpChallenge=null;if(otpCountdownTimer)clearInterval(otpCountdownTimer);otpCountdownTimer=null}
-function updateOtpCountdown(){if(!otpChallenge)return;const remain=Math.max(0,Math.ceil((otpChallenge.issuedAt+OTP_RESEND_MS-Date.now())/1000));$('#resendSeconds').textContent=remain;$('#resendOtpBtn').disabled=remain>0;if(Date.now()>otpChallenge.expiresAt){$('#otpExpiry').textContent='OTP tamat tempoh. Sila hantar semula.';$('#verifyOtpBtn').disabled=true}else{$('#otpExpiry').textContent='Sah selama 5 minit · Maksimum 5 percubaan';$('#verifyOtpBtn').disabled=false}}
-function startDemoOtp(email){clearOtpChallenge();otpChallenge={email,code:demoRandomCode(),issuedAt:Date.now(),expiresAt:Date.now()+OTP_LIFETIME_MS,attempts:0};$('#applicantOtpSection').classList.remove('hidden');$('#applicantSendSection').classList.add('hidden');$('#applicantEmail').readOnly=true;$('#applicantOtp').value='';$('#applicantLoginError').classList.add('hidden');$('#demoOtpNote').textContent='SIMULASI UAT — Tiada e-mel dihantar. Kod OTP demo: '+otpChallenge.code;updateOtpCountdown();otpCountdownTimer=setInterval(updateOtpCountdown,1000)}
-function activatePortal(tab){const p=tab==='applicant';$('#loginForm').classList.toggle('hidden',p);$('#applicantLoginForm').classList.toggle('hidden',!p);$('#staffTab').classList.toggle('active',!p);$('#applicantTab').classList.toggle('active',p);$('#applicantLoginError').classList.add('hidden')}
+function activatePortal(tab){
+ const applicant=tab==='applicant';
+ $('#loginForm').classList.toggle('hidden',applicant);
+ $('#applicantLoginForm').classList.toggle('hidden',!applicant);
+ $('#staffTab').classList.toggle('active',!applicant);
+ $('#applicantTab').classList.toggle('active',applicant);
+ $('#applicantLoginError').classList.add('hidden');
+}
+function applicantError(message){const el=$('#applicantLoginError');el.textContent=message;el.classList.remove('hidden')}
+function openApplicantPortal(){
+ const url=String(CFG.applicantPortalUrl||'').trim();
+ if(!/^https:\/\/script\.google\.com\/macros\/s\/[A-Za-z0-9_-]+\/exec(?:\?.*)?$/.test(url)){
+  applicantError('Portal OTP sebenar belum dideploy. Masukkan URL Apps Script /exec ke dalam frontend/config.js selepas deployment.');return;
+ }
+ window.location.assign(url);
+}
 
 let db;try{db=JSON.parse(localStorage.getItem(STORAGE))||seed()}catch{db=seed()}let role='KPP',page='dashboard',query='',statusFilter='',wizardStep=0,form={},trackedId='',selectedReview='';
 const $=s=>document.querySelector(s),persist=()=>localStorage.setItem(STORAGE,JSON.stringify(db)),esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])),fmt=date=>date?new Date(date.includes('T')?date:date+'T12:00:00').toLocaleDateString('ms-MY',{day:'2-digit',month:'short',year:'numeric'}):'—',now=()=>new Date().toISOString(),toast=m=>{const e=$('#toast');e.textContent=m;e.classList.remove('hidden');setTimeout(()=>e.classList.add('hidden'),3500)},pick=id=>db.applications.find(a=>a.id===id);
@@ -98,9 +105,7 @@ $('#loginForm').addEventListener('submit',event=>{event.preventDefault();
   $('#loginPassword').value='';loginAs(email);
 });
 $('#staffTab').onclick=()=>activatePortal('staff');$('#applicantTab').onclick=()=>activatePortal('applicant');
-$('#applicantLoginForm').addEventListener('submit',event=>{event.preventDefault();const email=$('#applicantEmail').value.trim().toLowerCase();if(email!==APPLICANT_UAT_EMAIL){applicantError('Untuk UAT, gunakan e-mel pemohon dummy yang ditetapkan.');return}startDemoOtp(email)});
-$('#verifyOtpBtn').onclick=()=>{if(!otpChallenge){applicantError('Minta OTP baharu.');return}if(Date.now()>otpChallenge.expiresAt){applicantError('OTP tamat tempoh.');return}if(otpChallenge.attempts>=OTP_MAX_ATTEMPTS){applicantError('Had percubaan dicapai. Minta OTP baharu.');return}otpChallenge.attempts++;if($('#applicantOtp').value.trim()!==otpChallenge.code){applicantError('OTP salah. Baki percubaan: '+(OTP_MAX_ATTEMPTS-otpChallenge.attempts));return}const email=otpChallenge.email;clearOtpChallenge();loginAs(email,true)};
-$('#resendOtpBtn').onclick=()=>{if(!otpChallenge||Date.now()-otpChallenge.issuedAt<OTP_RESEND_MS)return;startDemoOtp(otpChallenge.email)};
-$('#logoutBtn').onclick=()=>{loggedInEmail='';role='KPP';$('#app').classList.add('hidden');$('#loginScreen').classList.remove('hidden');$('#loginPassword').value='';clearOtpChallenge();$('#applicantOtpSection').classList.add('hidden');$('#applicantSendSection').classList.remove('hidden');$('#applicantEmail').readOnly=false;activatePortal('staff');};
-$('#roleSelect').onchange=e=>changeRole(e.target.value);$('#toggleNav').onclick=()=>$('#sidebar').classList.toggle('open');$('#bellBtn').onclick=()=>{const panel=$('#notifyPanel');panel.classList.toggle('hidden');panel.innerHTML='<h4>Notifikasi '+esc(roles[role])+'</h4>'+db.notifications.filter(n=>n.role===role).slice(0,7).map(n=>`<div class="notify-line">🔔 ${esc(n.message)} <small style="float:right;color:#9baac1">${esc(n.at)}</small></div>`).join('')};if(role==='SIGNATORY'){role='LETTER';localStorage.setItem(ROLEKEY,role)}db.applications.forEach(a=>{if(a.status==='SIGN'){a.status='WAIT_RETURN';a.stage='PENJANA_SURAT';a.sentToTkpkAt=a.sentToTkpkAt||''}});db.notifications=db.notifications.filter(n=>n.role!=='SIGNATORY');persist();if(role==='APPLICANT')page='tracking';window.ELABEL_UAT={getData:()=>structuredClone(db),reset:()=>{db=seed();persist();render()}};
+$('#applicantLoginForm').addEventListener('submit',event=>{event.preventDefault();openApplicantPortal()});
+$('#logoutBtn').onclick=()=>{loggedInEmail='';role='KPP';$('#app').classList.add('hidden');$('#loginScreen').classList.remove('hidden');$('#loginPassword').value='';activatePortal('staff');};
+$('#roleSelect').onchange=e=>changeRole(e.target.value);$('#toggleNav').onclick=()=>$('#sidebar').classList.toggle('open');$('#bellBtn').onclick=()=>{const panel=$('#notifyPanel');panel.classList.toggle('hidden');panel.innerHTML='<h4>Notifikasi '+esc(roles[role])+'</h4>'+db.notifications.filter(n=>n.role===role).slice(0,7).map(n=>`<div class="notify-line">🔔 ${esc(n.message)} <small style="float:right;color:#9baac1">${esc(n.at)}</small></div>`).join('')};if(role==='SIGNATORY'){role='LETTER';localStorage.setItem(ROLEKEY,role)}db.applications.forEach(a=>{if(a.status==='SIGN'){a.status='WAIT_RETURN';a.stage='PENJANA_SURAT';a.sentToTkpkAt=a.sentToTkpkAt||''}});db.notifications=db.notifications.filter(n=>n.role!=='SIGNATORY');persist();window.ELABEL_UAT={getData:()=>structuredClone(db),reset:()=>{db=seed();persist();render()}};
 })();
