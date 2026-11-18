@@ -6,7 +6,7 @@
     <h1>Selamat Datang ke e-Label</h1>
     <p>Sistem Pengurusan Permohonan Semakan Pelabelan Semula Produk</p>
     <div class="login-alert">PROTOTAIP UAT — login simulasi sahaja. Jangan gunakan kata laluan akaun MOH sebenar.</div>
-    <form id="loginForm" autocomplete="off">
+    <div class="portal-switch"><button id="staffTab" class="portal-tab active" type="button">🔐 Pegawai KKM</button><button id="applicantTab" class="portal-tab" type="button">✉ Portal Pemohon</button></div><form id="loginForm" autocomplete="off">
       <label for="loginEmail">E-mel pegawai</label>
       <input id="loginEmail" type="email" placeholder="nama@moh.gov.my" required autocomplete="off">
       <label for="loginPassword">Kata laluan demo</label>
@@ -14,7 +14,7 @@
       <div id="loginError" class="login-error hidden" role="alert"></div>
       <button type="submit" class="login-submit">Log Masuk ke Ruang Kerja →</button>
     </form>
-    <button id="publicPortalBtn" class="login-public">Portal Pemohon — Semak Status</button>
+    <form id="applicantLoginForm" class="hidden" autocomplete="off"><label for="applicantEmail">E-mel pemohon</label><input id="applicantEmail" type="email" value="matjeri99@gmail.com" required><div id="applicantSendSection"><button type="submit" class="login-submit">Hantar OTP →</button></div><div id="applicantOtpSection" class="hidden"><div class="demo-otp-note" id="demoOtpNote" aria-live="polite"></div><label for="applicantOtp">Kod OTP (6 digit)</label><input id="applicantOtp" inputmode="numeric" pattern="[0-9]{6}" maxlength="6" placeholder="000000"><button type="button" id="verifyOtpBtn" class="login-submit">Sahkan OTP & Masuk →</button><button type="button" id="resendOtpBtn" class="login-public" disabled>Hantar semula (<span id="resendSeconds">60</span>s)</button><small id="otpExpiry"></small></div><div id="applicantLoginError" class="login-error hidden" role="alert"></div></form>
     <small>UAT menggunakan data simulasi dalam pelayar. Tiada pengesahan Google/MFA atau perlindungan akses sebenar.</small>
   </div>
 </section>
@@ -23,7 +23,7 @@
     <div class="side-caption">RUANG KERJA</div><nav id="nav"></nav>
     <div class="side-footer"><span class="uat-dot"></span><div><b>Persekitaran UAT</b><small>Data demonstrasi • bukan rekod rasmi</small></div></div>
   </aside>
-  <div class="shell-main"><header class="topbar"><button class="mobile-toggle icon-button" id="toggleNav" aria-label="Buka menu">☰</button><div class="crumb"><b>e-Label</b><span id="crumbText"> / Dashboard</span></div><div class="top-actions"><span class="env-badge">UAT v1.4</span><div class="notify-wrap"><button class="icon-button notification-bell" id="bellBtn" title="Notifikasi" aria-label="Notifikasi"><span>♧</span><i id="bellCount">0</i></button><div class="notifications hidden" id="notifyPanel"></div></div><div class="role-control" id="roleControl"><div class="avatar">A</div><div><small>Simulasi peranan UAT</small><select id="roleSelect" aria-label="Pilih peranan"><option value="KPP">KPP / Ketua Penolong Pengarah</option><option value="MYSTEP">MySTEP / Pendaftaran</option><option value="REVIEWER">Pegawai Penyemak</option><option value="LETTER">Penjana Surat</option><option value="APPLICANT">Pemohon</option></select></div></div><button id="logoutBtn" class="icon-button" title="Log keluar" aria-label="Log keluar">⇥</button></div></header>
+  <div class="shell-main"><header class="topbar"><button class="mobile-toggle icon-button" id="toggleNav" aria-label="Buka menu">☰</button><div class="crumb"><b>e-Label</b><span id="crumbText"> / Dashboard</span></div><div class="top-actions"><span class="env-badge">UAT v1.6</span><div class="notify-wrap"><button class="icon-button notification-bell" id="bellBtn" title="Notifikasi" aria-label="Notifikasi"><span>♧</span><i id="bellCount">0</i></button><div class="notifications hidden" id="notifyPanel"></div></div><div class="role-control" id="roleControl"><div class="avatar">A</div><div><small>Simulasi peranan UAT</small><select id="roleSelect" aria-label="Pilih peranan"><option value="KPP">KPP / Ketua Penolong Pengarah</option><option value="MYSTEP">MySTEP / Pendaftaran</option><option value="REVIEWER">Pegawai Penyemak</option><option value="LETTER">Penjana Surat</option><option value="LETTER_REVIEWER">Penyemak Surat</option></select></div></div><button id="logoutBtn" class="icon-button" title="Log keluar" aria-label="Log keluar">⇥</button></div></header>
   <main id="content" class="content"></main><footer class="footer">e-Label UAT · Paparan simulasi dengan storan pelayar setempat · Akses rasmi belum diaktifkan</footer></div>
 </div>
 <div id="toast" class="toast hidden" role="status"></div><div id="modalRoot"></div>
