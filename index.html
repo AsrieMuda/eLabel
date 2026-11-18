@@ -1,10 +1,29 @@
 <!doctype html><html lang="ms"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#102b53"><title>e-Label | Sistem Semakan Pelabelan Semula</title><link rel="stylesheet" href="styles.css"></head><body>
-<div id="app" class="app-shell">
+<section id="loginScreen" class="login-screen">
+  <div class="login-panel">
+    <div class="login-icon">e<span>✓</span></div>
+    <div class="login-eyebrow">KEMENTERIAN KESIHATAN MALAYSIA · UAT</div>
+    <h1>Selamat Datang ke e-Label</h1>
+    <p>Sistem Pengurusan Permohonan Semakan Pelabelan Semula Produk</p>
+    <div class="login-alert">PROTOTAIP UAT — login simulasi sahaja. Jangan gunakan kata laluan akaun MOH sebenar.</div>
+    <form id="loginForm" autocomplete="off">
+      <label for="loginEmail">E-mel pegawai</label>
+      <input id="loginEmail" type="email" placeholder="nama@moh.gov.my" required autocomplete="off">
+      <label for="loginPassword">Kata laluan demo</label>
+      <input id="loginPassword" type="password" placeholder="Masukkan kata laluan demo" required autocomplete="off">
+      <div id="loginError" class="login-error hidden" role="alert"></div>
+      <button type="submit" class="login-submit">Log Masuk ke Ruang Kerja →</button>
+    </form>
+    <button id="publicPortalBtn" class="login-public">Portal Pemohon — Semak Status</button>
+    <small>UAT menggunakan data simulasi dalam pelayar. Tiada pengesahan Google/MFA atau perlindungan akses sebenar.</small>
+  </div>
+</section>
+<div id="app" class="app-shell hidden">
   <aside class="sidebar" id="sidebar"><div class="brand"><div class="brand-mark">e<span>✓</span></div><div><small>KKM • PROTOTAIP UAT</small><strong>e-Label</strong><span>Semakan Pelabelan<br>Semula Produk</span></div></div>
     <div class="side-caption">RUANG KERJA</div><nav id="nav"></nav>
     <div class="side-footer"><span class="uat-dot"></span><div><b>Persekitaran UAT</b><small>Data demonstrasi • bukan rekod rasmi</small></div></div>
   </aside>
-  <div class="shell-main"><header class="topbar"><button class="mobile-toggle icon-button" id="toggleNav" aria-label="Buka menu">☰</button><div class="crumb"><b>e-Label</b><span id="crumbText"> / Dashboard</span></div><div class="top-actions"><span class="env-badge">UAT v1.3</span><div class="notify-wrap"><button class="icon-button notification-bell" id="bellBtn" title="Notifikasi" aria-label="Notifikasi"><span>♧</span><i id="bellCount">0</i></button><div class="notifications hidden" id="notifyPanel"></div></div><div class="role-control"><div class="avatar">A</div><div><small>Simulasi peranan UAT</small><select id="roleSelect" aria-label="Pilih peranan"><option value="KPP">KPP / Ketua Penolong Pengarah</option><option value="MYSTEP">MySTEP / Pendaftaran</option><option value="REVIEWER">Pegawai Penyemak</option><option value="LETTER">Penjana Surat</option><option value="APPLICANT">Pemohon</option></select></div></div></div></header>
+  <div class="shell-main"><header class="topbar"><button class="mobile-toggle icon-button" id="toggleNav" aria-label="Buka menu">☰</button><div class="crumb"><b>e-Label</b><span id="crumbText"> / Dashboard</span></div><div class="top-actions"><span class="env-badge">UAT v1.4</span><div class="notify-wrap"><button class="icon-button notification-bell" id="bellBtn" title="Notifikasi" aria-label="Notifikasi"><span>♧</span><i id="bellCount">0</i></button><div class="notifications hidden" id="notifyPanel"></div></div><div class="role-control" id="roleControl"><div class="avatar">A</div><div><small>Simulasi peranan UAT</small><select id="roleSelect" aria-label="Pilih peranan"><option value="KPP">KPP / Ketua Penolong Pengarah</option><option value="MYSTEP">MySTEP / Pendaftaran</option><option value="REVIEWER">Pegawai Penyemak</option><option value="LETTER">Penjana Surat</option><option value="APPLICANT">Pemohon</option></select></div></div><button id="logoutBtn" class="icon-button" title="Log keluar" aria-label="Log keluar">⇥</button></div></header>
   <main id="content" class="content"></main><footer class="footer">e-Label UAT · Paparan simulasi dengan storan pelayar setempat · Akses rasmi belum diaktifkan</footer></div>
 </div>
 <div id="toast" class="toast hidden" role="status"></div><div id="modalRoot"></div>
