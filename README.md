@@ -55,3 +55,12 @@ Tiada surat rasmi atau tandatangan digital sah dikeluarkan oleh prototaip ini. D
 ## Jurnal ringkas
 
 2026-11-18: UI berdasarkan lakaran dashboard KPP; database 13 tab sedia ada; pembangunan demo UAT dengan aliran role-based; backend awal dihasilkan tetapi belum dipasang. Ujian login/Google Sheets API sebenar masih tertangguh.
+
+
+## v1.3 — Pembetulan Aliran Surat (18 Nov 2026)
+- Role SIGNATORY/TKPK dikeluarkan. TKPK (KA) menandatangani surat di luar sistem.
+- Pegawai Penjana Surat rekod tarikh hantar dan terima; upload PDF bertandatangan; kemudian simulasikan edaran.
+- PDF UAT disimpan secara setempat dengan IndexedDB; boleh dimuat turun melalui portal pemohon pada pelayar/peranti sama.
+- Tiada e-mel sebenar dihantar, tiada Drive upload sebenar, tiada kawalan login/OTP production.
+- Backend Apps Script masih foundation dan BELUM menyokong workflow surat ini. Perlu API authenticated, private Drive file, status history dan mail queue sebelum production.
+- Jangan letak data peribadi atau surat sebenar dalam prototaip.
